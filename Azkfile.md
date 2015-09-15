@@ -11,6 +11,18 @@
 azk start -Rv
 ```
 
+## How to run
+
+Stringer needs to fetch from sources so after you set an simple password add your feed and restart azk:
+
+- set your password
+- add a feed source
+- restart azk
+
+```sh
+azk start
+```
+
 
 --------------------
 

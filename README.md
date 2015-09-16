@@ -18,6 +18,41 @@ But it does have keyboard shortcuts and was made with love!
 
 Stringer is a Ruby (2.0.0+) app based on Sinatra, ActiveRecord, PostgreSQL, Backbone.js and DelayedJob.
 
+## Running locally
+
+Click the button bellow to quickly and safely install this project on your local machine.
+
+[![Run project](https://s3-sa-east-1.amazonaws.com/assets.azk.io/azk-button.png)](http://run-stage.azk.io/start/?repo=azk-button/stringer&ref=azkfile)
+
+The `Run Project` button employs `azk`, a lightweight open source orchestration tool that will automatically isolate and configure the application's environment for you.
+
+Learn more about `azk` [here](Azkfile.md).
+
+## Deploying to DigitalOcean
+
+After you run this project locally using [`Run Project` button](#running-locally), deploying to [DigitalOcean](http://digitalocean.com/) is very simple.
+
+First, be sure you have SSH keys configured in your machine. If you don't have it yet (or if you aren't sure about it), just follow steps 1 and 2 of [this tutorial](https://help.github.com/articles/generating-ssh-keys/).
+
+Next, put your [personal access token](https://cloud.digitalocean.com/settings/applications) into a `.env` file:
+
+```bash
+$ cd path/to/the/project
+$ echo "DEPLOY_API_TOKEN=<YOUR-PERSONAL-ACCESS-TOKEN>" >> .env
+```
+
+Then, just run the following:
+
+```bash
+$ azk shell deploy
+```
+
+The `Run Project` button employs `azk`, a lightweight open source orchestration tool that will automatically isolate and configure the application's environment for you.
+
+Find further instructions on how to deploy to DigitalOcean using `azk` [here](https://github.com/azukiapp/docker-deploy-digitalocean/blob/master/README.md).
+
+## Deploying to Heroku
+
 [![Deploy to Heroku](https://cdn.herokuapp.com/deploy/button.svg)](https://heroku.com/deploy)
 
 Stringer will run just fine on the Heroku free plan.
@@ -87,30 +122,6 @@ You can clean up old stories by running: `rake cleanup_old_stories`
 By default, this removes read stories that are more than 30 days old (that
 are not starred). You can either run this manually or add it as a scheduled
 task.
-
-## Development
-
-Run the Ruby tests with `rspec`.
-
-Run the Javascript tests with `rake test_js` and then open a browser to `http://localhost:4567/test`.
-
-### Getting Started
-
-To get started using Stringer for development you first need to install `foreman`.
-
-    gem install foreman
-
-Then run the following commands.
-
-```sh
-bundle install
-rake db:migrate
-foreman start
-```
-
-The application will be running on port `5000`.
-
-You can launch an interactive console (ala `rails c`) using `racksh`.
 
 ## Acknowledgements
 

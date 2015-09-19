@@ -4,13 +4,11 @@ Bundler.setup
 require "rubygems"
 require "net/http"
 require 'active_record'
-require 'delayed_job'
-require 'delayed_job_active_record'
 
 require "sinatra/activerecord/rake"
 
 require "./app"
-require_relative "./app/jobs/fetch_feed_job"
+require_relative "./app/workers/fetch_feed_worker"
 require_relative "./app/tasks/fetch_feeds"
 require_relative "./app/tasks/change_password"
 require_relative "./app/tasks/remove_old_stories.rb"
@@ -28,28 +26,13 @@ task :lazy_fetch do
   end
 
   FeedRepository.list.each do |feed|
-    Delayed::Job.enqueue FetchFeedJob.new(feed.id)
+    FetchFeedWorker.perform_async(feed.id)
   end
 end
 
 desc "Fetch single feed"
 task :fetch_feed, :id do |t, args|
   FetchFeed.new(Feed.find(args[:id])).fetch
-end
-
-desc "Clear the delayed_job queue."
-task :clear_jobs do
-  Delayed::Job.delete_all
-end
-
-desc "Work the delayed_job queue."
-task :work_jobs do
-  Delayed::Job.delete_all
-
-  3.times do
-    Delayed::Worker.new(:min_priority => ENV['MIN_PRIORITY'], 
-      :max_priority => ENV['MAX_PRIORITY']).start
-  end
 end
 
 desc "Change your password"

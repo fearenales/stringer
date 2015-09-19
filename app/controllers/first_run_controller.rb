@@ -4,6 +4,7 @@ require_relative "../commands/users/complete_setup"
 require_relative "../repositories/user_repository"
 require_relative "../repositories/story_repository"
 require_relative "../tasks/fetch_feeds"
+require_relative '../workers/fetch_feed_worker'
 
 class Stringer < Sinatra::Base
   namespace "/setup" do
@@ -30,7 +31,10 @@ class Stringer < Sinatra::Base
     end
 
     get "/tutorial" do
-      FetchFeeds.enqueue(Feed.all)
+      Feed.all.each do |feed|
+        FetchFeedWorker.perform_async(feed.id)
+      end
+
       CompleteSetup.complete(current_user)
 
       @sample_stories = StoryRepository.samples

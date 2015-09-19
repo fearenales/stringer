@@ -1,6 +1,7 @@
 require_relative "../../models/feed"
 require_relative "../../models/group"
 require_relative "../../utils/opml_parser"
+require_relative "../../workers/fetch_feed_worker"
 
 class ImportFromOpml
   ONE_DAY = 24 * 60 * 60
@@ -27,9 +28,12 @@ class ImportFromOpml
 
     def create_feed(parsed_feed, group)
       feed = Feed.where(name: parsed_feed[:name], url: parsed_feed[:url]).first_or_initialize
-      feed.last_fetched = Time.now - ONE_DAY if feed.new_record?
+      is_new = feed.new_record?
       feed.group_id = group.id if group
       feed.save
+      if is_new
+        FetchFeedWorker.perform_sync(feed.id)
+      end
     end
   end
 end

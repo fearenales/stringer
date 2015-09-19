@@ -5,7 +5,7 @@
 systems({
   stringer: {
     // Dependent systems
-    depends: ["postgres"],
+    depends: ["postgres", "redis"],
     // More images:  http://images.azk.io
     image: {"docker": "azukiapp/ruby:2.0"},
     // Steps to execute before running instances
@@ -19,7 +19,7 @@ systems({
     // command: "bundle exec rackup config.ru --pid /tmp/ruby.pid --port $HTTP_PORT --host 0.0.0.0",
     command: [
       // fetch now!
-      "bundle exec rake fetch_feeds",
+      // "bundle exec rake fetch_feeds",
       // start server
       "bundle exec unicorn -p $HTTP_PORT -c ./config/unicorn.rb",
     ].join(";"),
@@ -54,6 +54,20 @@ systems({
       //$ openssl rand -hex 20
       SECRET_TOKEN: "d108461ed31016b360479e074a4ae4fefff1d8eb",
     },
+  },
+  worker: {
+    extends: "stringer",
+    depends: [ "stringer", "postgres", "redis" ],
+    provision: null,
+    command: "bundle exec sidekiq -q default -r ./config/sidekiq.rb -v",
+    http: null,
+    ports: null,
+  },
+  redis: {
+    image: { docker: "redis" },
+    export_envs: {
+      "REDIS_URL": "redis://#{net.host}:#{net.port[6379]}",
+    }
   },
   postgres: {
     // Dependent systems

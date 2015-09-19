@@ -29,10 +29,11 @@ class ImportFromOpml
     def create_feed(parsed_feed, group)
       feed = Feed.where(name: parsed_feed[:name], url: parsed_feed[:url]).first_or_initialize
       is_new = feed.new_record?
+      feed.last_fetched = Time.now - ONE_DAY if feed.new_record?
       feed.group_id = group.id if group
       feed.save
       if is_new
-        FetchFeedWorker.perform_sync(feed.id)
+        FetchFeedWorker.perform_async(feed.id)
       end
     end
   end

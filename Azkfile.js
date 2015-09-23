@@ -126,21 +126,25 @@ systems({
     scalable: {"default": 0, "limit": 0},
 
     envs: {
-      GIT_CHECKOUT_COMMIT_BRANCH_TAG: 'azkfile',
+      GIT_CHECKOUT_COMMIT_BRANCH_TAG: 'sidekiq',
       AZK_RESTART_COMMAND: 'azk restart -Rvv',
       RUN_SETUP: 'true',
       RUN_CONFIGURE: 'true',
       RUN_DEPLOY: 'true',
+      BOX_SIZE: '4gb',
+      BOX_IMAGE: '13614040'
     }
   },
   "fast-deploy": {
     extends: 'deploy',
     envs: {
-      GIT_CHECKOUT_COMMIT_BRANCH_TAG: 'azkfile',
+      GIT_CHECKOUT_COMMIT_BRANCH_TAG: 'sidekiq',
       AZK_RESTART_COMMAND: 'azk restart -Rvv',
       RUN_SETUP: 'false',
       RUN_CONFIGURE: 'false',
       RUN_DEPLOY: 'true',
+      BOX_SIZE: '4gb',
+      BOX_IMAGE: '13614040'
     }
   },
 });

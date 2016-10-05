@@ -1,14 +1,11 @@
-development:
-  adapter: postgresql
-  database: stringer_dev
-  encoding: unicode
-  pool: 5
+development: &default
+  min_messages: warning
+  pool: <%= [ENV.fetch("MAX_THREADS", 5).to_i, ENV.fetch("DB_POOL", 5).to_i].max %>
+  timeout: 5000
+  url:  <%= ENV.fetch("DATABASE_URL", "") %>
 
 test:
-  adapter: sqlite3
-  database: db/stringer_test.sqlite
+  <<: *default
 
-production:
-  url: <%= ENV["DATABASE_URL"] %>
-  encoding: unicode
-  pool: 5
+production: &deploy
+  <<: *default
